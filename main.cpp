@@ -1,15 +1,17 @@
 ﻿#include "Input.h"
 #include "WinApp.h"
 #include "DirectXCommon.h"
-#include "Sprite.h"
 #include "SpriteCommon.h"
+#include "Sprite.h"
 
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-#pragma region 基盤システムの初期化
-    //WindowsAPI
+
+#pragma region 基礎システム初期化
+
     WinApp* winApp = nullptr;
+
     winApp = new WinApp();
     winApp->Initialize();
 
@@ -22,70 +24,63 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     input->Initialize(winApp);
 
     SpriteCommon* spriteCommon = nullptr;
-    spriteCommon = new SpriteCommon;
+    spriteCommon = new SpriteCommon();
     spriteCommon->Initialize(dxCommon);
 
-#pragma endregion 基盤システムの初期化
+#pragma endregion
 
-    
-#pragma region 最初のシーンの初期化
-   
+#pragma region 最初のシーン初期化
+
     Sprite* sprite = nullptr;
     sprite = new Sprite();
     sprite->Initialize(spriteCommon);
 
-#pragma endregion 最初のシーンの初期化
+#pragma endregion
+
     // ゲームループ
     while (true) {
-
-#pragma region 基盤システムの更新
-        //メッセージ処理
+#pragma region 基礎システム更新
+        // Windowsのメッセージ処理
         if (winApp->ProcessMessage()) {
             break;
         }
-
-        //入力の更新処理
+        // 入力の更新
         input->Update();
-#pragma endregion 基盤システムの更新
-
-       
-#pragma region 最初のシーンの更新
-
-           
-#pragma endregion 最初のシーンの更新
-
-        //描画前処理
+#pragma endregion
+#pragma region 最初のシーン更新
+#pragma endregion
+        // 描画前処理
         dxCommon->PreDraw();
 
-#pragma region 最初のシーンの描画
+#pragma region 最初のシーン描画
         spriteCommon->PreDraw();
         sprite->Draw();
 
-#pragma endregion 最初のシーンの描画
+#pragma endregion
 
+        // 描画後処理
         dxCommon->PostDraw();
-
     }
-#pragma region 最初のシーンの終了
 
-#pragma endregion 最初のシーンの終了
+#pragma region 最初のシーン終了
+
     delete sprite;
-    sprite = nullptr;
 
-#pragma region 基盤システムの終了
-    delete input;
-    input = nullptr;
+#pragma endregion
 
-    delete dxCommon;
-    dxCommon = nullptr;
+#pragma region 基礎システム終了
 
     delete spriteCommon;
-    spriteCommon = nullptr;
 
+    // 入力解放
+    delete input;
+    // DirectX解放
+    delete dxCommon;
+    // ウィンドウクラスを登録解除
     winApp->Finalize();
+    // WindowsAPI解放
     delete winApp;
-    winApp = nullptr;
-#pragma endregion 基盤システムの終了
 
+#pragma endregion
     return 0;
 }

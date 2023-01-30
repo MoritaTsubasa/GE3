@@ -1,23 +1,23 @@
 #pragma once
-#include <DirectXMath.h>
 #include <d3d12.h>
 #include <wrl.h>
-#include "DIrectXCommon.h"
+#include "DirectXCommon.h"
 
 class SpriteCommon
 {
-public:
+public: //メンバ関数
 	void Initialize(DirectXCommon* _dxCommon);
 
+	// 描画
 	void PreDraw();
 
 	DirectXCommon* GetDirectXCommon() { return dxCommon; }
 
-private:
+private://メンバ変数
 	DirectXCommon* dxCommon = nullptr;
+	// パイプラインステート
+	Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState;
+	// ルートシグネチャ
+	Microsoft::WRL::ComPtr<ID3D12RootSignature> rootSignature;
 
-	Microsoft::WRL::ComPtr<ID3D12PipelineState>pipelineState;
-
-	Microsoft::WRL::ComPtr<ID3D12RootSignature>rootSignature;
 };
-
