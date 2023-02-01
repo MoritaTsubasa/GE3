@@ -3,22 +3,17 @@
 #include "DirectXCommon.h"
 #include "SpriteCommon.h"
 #include "Sprite.h"
-
-
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
-
 #pragma region 基礎システム初期化
-
     WinApp* winApp = nullptr;
-
     winApp = new WinApp();
     winApp->Initialize();
 
     DirectXCommon* dxCommon = nullptr;
     dxCommon = new DirectXCommon();
     dxCommon->Initialize(winApp);
-
+    // 入力初期化
     Input* input = nullptr;
     input = new Input();
     input->Initialize(winApp);
@@ -26,6 +21,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
     SpriteCommon* spriteCommon = nullptr;
     spriteCommon = new SpriteCommon();
     spriteCommon->Initialize(dxCommon);
+    spriteCommon->LoadTexture(0, "texture.png");
+    spriteCommon->LoadTexture(1, "reimu.png");
+
+
 
 #pragma endregion
 
@@ -33,7 +32,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
     Sprite* sprite = nullptr;
     sprite = new Sprite();
-    sprite->Initialize(spriteCommon);
+    sprite->Initialize(spriteCommon, 0);
 
 #pragma endregion
 
@@ -47,31 +46,38 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
         // 入力の更新
         input->Update();
 #pragma endregion
+
 #pragma region 最初のシーン更新
+
+        DirectX::XMFLOAT2 pos = sprite->GetPosition();
+        DirectX::XMFLOAT2 size = sprite->GetSize();
+        size.y += 0.1f;
+
+        sprite->SetPosition(pos);
+        sprite->SetSize(size);
+        sprite->Update();
+
+
 #pragma endregion
+
         // 描画前処理
         dxCommon->PreDraw();
 
 #pragma region 最初のシーン描画
         spriteCommon->PreDraw();
         sprite->Draw();
+        spriteCommon->PostDraw();
 
 #pragma endregion
 
         // 描画後処理
         dxCommon->PostDraw();
     }
-
 #pragma region 最初のシーン終了
-
     delete sprite;
-
 #pragma endregion
-
 #pragma region 基礎システム終了
-
     delete spriteCommon;
-
     // 入力解放
     delete input;
     // DirectX解放
